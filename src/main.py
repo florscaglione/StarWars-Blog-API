@@ -30,7 +30,9 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-# Endpoint para CREAR VARIOS USUARIOS (y no tener que crear uno a uno en el flask admin): FUNCIONA
+#### ENDPOINTS PARA CREAR LA BASE DE DATOS AUTOMÁTICAMENTE ####
+
+# CREAR VARIOS USUARIOS: FUNCIONA
 @app.route('/create-users', methods=['GET'])
 def list_of_users():
 
@@ -65,6 +67,66 @@ def list_of_users():
     db.session.commit()
     
     return jsonify({"msg": "Users loaded"})
+
+
+# CREAR VARIOS PERSONAJES: FUNCIONA
+@app.route('/create-characters', methods=['GET'])
+def list_of_characters():
+
+    data = {
+        "characters": [
+            {
+                "name": "Darth Vader"        
+            },
+            {
+                "name": "R2-D2"        
+            },
+            {
+                "name": "Luke Skywalker"        
+            },
+            {
+                "name": "Yoda"        
+            }
+        ],
+    }
+
+    for character in data['characters']:
+        new_character = Character(name = character['name'])
+        db.session.add(new_character)
+
+    db.session.commit()
+    
+    return jsonify({"msg": "Characters loaded"})
+
+
+# CREAR VARIOS PLANETAS: FUNCIONA
+@app.route('/create-planets', methods=['GET'])
+def list_of_planets():
+
+    data = {
+        "planets": [
+            {
+                "name": "ALDERAAN"        
+            },
+            {
+                "name": "ENDOR"        
+            },
+            {
+                "name": "NABOO"        
+            },
+            {
+                "name": "TATOOINE"        
+            }
+        ],
+    }
+
+    for planet in data['planets']:
+        new_planet = Planet(name = planet['name'])
+        db.session.add(new_planet)
+
+    db.session.commit()
+    
+    return jsonify({"msg": "Planets loaded"})
 
 #### GET ####
 
@@ -134,7 +196,7 @@ def add_favorite_planet(planet_id):
     db.session.commit()
 
     response_body = {
-        "State": "Added"
+        "State": "Planeta favorito añadido"
     }    
 
     return jsonify(response_body), 200
@@ -150,7 +212,7 @@ def add_favorite_character(character_id):
     db.session.commit()
 
     response_body = {
-        "State": "Added"
+        "State": "Personaje favorito añadido"
     }    
 
     return jsonify(response_body), 200
@@ -161,7 +223,7 @@ def add_favorite_character(character_id):
 @app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planet(planet_id):
     fav_planet = FavoritePlanet.query.get(planet_id)
-    user = User.query.get(3)
+    user = User.query.get(10)
 
     if not fav_planet: 
         return jsonify({"fail": "Planeta favorito no encontrado"}), 404
@@ -171,11 +233,11 @@ def delete_favorite_planet(planet_id):
 
     return jsonify({"success": "Planeta favorito eliminado"}), 200   
 
-# Eliminar un personaje favorito de un usuario: 
+# Eliminar un personaje favorito de un usuario: FUNCIONA
 @app.route('/favorite/character/<int:character_id>', methods=['DELETE'])
 def delete_favorite_character(character_id):
     fav_character = FavoriteCharacter.query.get(character_id)
-    user = User.query.get(3)
+    user = User.query.get(10)
 
     if not fav_character: 
         return jsonify({"fail": "Personaje favorito no encontrado"}), 404
