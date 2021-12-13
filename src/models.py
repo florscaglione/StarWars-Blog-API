@@ -40,6 +40,7 @@ class Character(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "name": self.name,
             "height": self.height,
             "hair_color": self.hair_color,
@@ -66,6 +67,7 @@ class Planet(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "name": self.name,
             "population": self.population,
             "climate": self.climate,
